@@ -10,6 +10,10 @@ sssd_nss:
   filter_users: root
   filter_groups: root
 
+sssd_pam:
+  offline_credentials_expiration: 1
+  offline_failed_login_attempts: 3
+  
 sssd_domain_defaults:
   min_id: 1
   max_id: 0
