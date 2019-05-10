@@ -7,6 +7,16 @@ debug_level = {{ sssd_defaults.debug_level }}
 [nss]
 filter_users = {{ sssd_nss.filter_users }}
 filter_groups = {{ sssd_nss.filter_users }}
+{% if sssd_nss.shell_fallback is defined %}
+shell_fallback = {{ sssd_nss.shell_fallback }}
+{% endif %}
+{% if sssd_nss.vetoed_shells is defined %}
+vetoed_shells = {{ sssd_nss.vetoed_shells }}
+{% endif %}
+
+[pam]
+offline_credentials_expiration = {{ sssd_pam.offline_credentials_expiration }}
+offline_failed_login_attempts = {{ sssd_pam.offline_failed_login_attempts }}
 
 {% for domain in sssd_domains %}
 [domain/{{ domain.name }}]
@@ -26,6 +36,15 @@ auth_provider = {{ domain.auth_provider
 enumerate = {{ domain.enumerate
     if domain.enumerate is defined
     else sssd_domain_defaults.enumerate }}
+{% if domain.access_provider is defined %}
+access_provider = {{ domain.access_provider }}
+{% endif %}
+{% if domain.cache_credentials is defined %}
+cache_credentials = {{ domain.cache_credentials }}
+{% endif %}
+{% if domain.override_homedir is defined %}
+override_homedir = {{ domain.override_homedir }}
+{% endif %}
 {# ldap connection #}
 ldap_uri = {{ domain.ldap_uri
     if domain.ldap_uri is defined
@@ -33,6 +52,9 @@ ldap_uri = {{ domain.ldap_uri
 ldap_id_use_start_tls = {{ domain.ldap_id_use_start_tls
     if domain.ldap_id_use_start_tls is defined
     else sssd_domain_defaults.ldap_id_use_start_tls }}
+{% if domain.ldap_tls_cacert is defined %}
+ldap_tls_cacert = {{ domain.ldap_tls_cacert }}
+{% endif %}
 ldap_tls_reqcert = {{ domain.ldap_tls_reqcert
     if domain.ldap_tls_reqcert is defined
     else sssd_domain_defaults.ldap_tls_reqcert }}
@@ -49,8 +71,14 @@ ldap_search_base = {{ domain.ldap_search_base
     if domain.ldap_search_base is defined
     else sssd_domain_defaults.ldap_search_base }}
 {# custom user settings #}
+{% if domain.ldap_schema is defined %}
+ldap_schema = {{ domain.ldap_schema }}
+{% endif %}
 {% if domain.ldap_user_search_base is defined %}
 ldap_user_search_base = {{ domain.ldap_user_search_base }}
+{% endif %}
+{% if domain.ldap_access_filter is defined %}
+ldap_access_filter = {{ domain.ldap_access_filter }}
 {% endif %}
 {% if domain.ldap_user_object_class is defined %}
 ldap_user_object_class = {{ domain.ldap_user_object_class }}
